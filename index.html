@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>JavaScript - VueJS</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/
+twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body class="container">
+	<main id="app" >
+	<header>
+		<h1>{{ title }}</h1>
+	</header>
+	<section v-if="!isSend">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form method="post">
+					<div class="form-group">
+						<label for="emailInput">Email</label>
+						<input v-model="email" class="form-control" type="email" name="emailAddress"
+						id="emailInput" value="" placeholder="dr@who.com">
+					</div>
+					<div class="form-group">
+						<label for="inputFirstName">First name</label>
+						<input v-model="firstName" class="form-control" name="firstName" id="inputFirstName">
+					</div>
+					<div class="form-group">
+						<label for="inputLastName">Last Name</label>
+						<input v-model="lastName" class="form-control" type="text" name="lastName" id="inputLastName">
+					</div>
+					<div class="form-group">
+						<label for="inputTel">Phone</label>
+						<input v-model="phone" class="form-control" type="tel" name="phone" id="inputTel">
+					</div>
+					
+					
+					<div v-for="(guest, index) of guests" class="form-group">
+						<label @dblclick="onRemoveInput($event, index)" for="inputTel">Guest {{ index + 1 }}</label>
+						<input v-model="guests[index]" class="form-control" type="tel" name="phone" id="inputTel">
+					</div>
+
+
+					<button 
+						type="submit"
+						name="addGuest" 
+						class="btn btn-default"
+						@click="addInput($event)"
+					>Guest add+ </button>
+					
+					<button type="submit" @click="onSubmit($event)" name="sendForm" class="btn btn-success">Send Data</button>
+					
+				</form>
+			</div>
+		</div>
+	</section>
+
+
+	
+	<table v-if="isSend" class="table">
+	  <thead>
+	    <tr>
+	      <th scope="col">Email</th>
+	      <th scope="col">First name</th>
+	      <th scope="col">Last name</th>
+	      <th scope="col">Phone</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td>{{ email }}</td>
+	      <td>{{ firstName }}</td>
+	      <td>{{ lastName }}</td>
+	      <td>{{ phone }}</td>
+	    </tr>
+	    <tr v-for="guest of guests">
+	      <td >{{ guest }}</td>
+	    </tr>
+	  </tbody>
+	</table>
+</main>
+	<script>
+		var app = new Vue({
+		  el: '#app',
+		  data: {
+		  	isSend: false,
+		    title: 'Форма для гостей',
+		    email: '',
+		    firstName: '',
+		    lastName: '',
+		    phone: '',
+		    guests: []
+		  },
+		  methods: {
+			addInput (e) {
+				e.preventDefault();
+				this.guests.push('');
+			},
+			onSubmit (e) {
+				e.preventDefault();
+				this.isSend = true;
+				const formGuest = {
+					email: this.email,
+				    firstName: this.firstName,
+				    lastName: this.lastName,
+				    phone: this.phone,
+				    guests: this.guests
+				}
+				console.log('click', formGuest);
+			},
+			onRemoveInput (e, index) {
+				this.guests.splice(index, 1);
+				console.log('delete');
+			}
+		  }
+		})
+	</script>
+
+</body>
+</html>
